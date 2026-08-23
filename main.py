@@ -73,6 +73,11 @@ app.include_router(patient_views_router)
 app.include_router(doctor_views_router)
 app.include_router(admin_views_router)
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    from fastapi.responses import FileResponse
+    return FileResponse("app/static/img/favicon.png")
+
 @app.get("/")
 def root():
     return RedirectResponse(url="/login")
