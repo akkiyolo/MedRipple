@@ -35,13 +35,6 @@ class ChatAgent:
         return context
 
     @staticmethod
-    def _clean_response(text: str) -> str:
-        import re
-        # Qwen models often prepend their chain of thought with "Here's a thinking process:" and end it with a checkmark
-        cleaned = re.sub(r"(?s)^Here's a thinking process:.*?✅\s*", "", text)
-        return cleaned.strip()
-
-    @staticmethod
     def chat_with_patient_agent(db: Session, user: User, message: str, history: List[Dict[str, str]]) -> str:
         if not user.patient_profile:
             return "I'm sorry, but I couldn't find your patient profile."
@@ -53,8 +46,7 @@ class ChatAgent:
             "You are talking directly to the patient. "
             "Use the provided patient health context to give personalized, safe, and relevant answers. "
             "Always advise the patient to consult their doctor for serious medical decisions or emergencies. "
-            "Keep your responses clear, supportive, and formatted cleanly. "
-            "IMPORTANT: Do not include your internal thinking process, reasoning, or 'Here's a thinking process' block. Just output the final response directly.\n\n"
+            "Keep your responses clear, supportive, and formatted cleanly.\n\n"
             f"{context}"
         )
         
@@ -67,11 +59,11 @@ class ChatAgent:
         try:
             response = client.chat.completions.create(
                 messages=messages,
-                model="qwen/qwen3.6-27b",
+                model="openai/gpt-oss-20b",
                 temperature=0.5,
                 max_tokens=500
             )
-            return ChatAgent._clean_response(response.choices[0].message.content)
+            return response.choices[0].message.content
         except Exception as e:
             from app.core.logging import logger
             logger.error(f"Error in Patient Chat Agent: {e}")
@@ -86,8 +78,7 @@ class ChatAgent:
             "chart review, and care planning. "
             "You are talking to a Doctor. Be concise, professional, and data-driven. "
             "Use the provided patient context to answer the doctor's questions accurately. "
-            "If summarizing, use bullet points. "
-            "IMPORTANT: Do not include your internal thinking process, reasoning, or 'Here's a thinking process' block. Just output the final response directly.\n\n"
+            "If summarizing, use bullet points.\n\n"
             f"{context}"
         )
         
@@ -100,11 +91,11 @@ class ChatAgent:
         try:
             response = client.chat.completions.create(
                 messages=messages,
-                model="qwen/qwen3.6-27b", # Updated model
+                model="openai/gpt-oss-120b",
                 temperature=0.3,
                 max_tokens=800
             )
-            return ChatAgent._clean_response(response.choices[0].message.content)
+            return response.choices[0].message.content
         except Exception as e:
             from app.core.logging import logger
             logger.error(f"Error in Doctor Chat Agent: {e}")
