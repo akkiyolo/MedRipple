@@ -18,6 +18,18 @@ class Base(DeclarativeBase):
 
 def init_db():
     try:
+        # Import all models here so SQLAlchemy knows about them before create_all
+        import app.models.user
+        import app.models.patient
+        import app.models.doctor
+        import app.models.doctor_schedule
+        import app.models.appointment
+        import app.models.notification
+        
+        # Ensure the vector extension exists for PGVector
+        with engine.begin() as conn:
+            conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector;"))
+
         Base.metadata.create_all(bind=engine)
         with engine.begin() as conn:
             # Migration checks for users table columns
