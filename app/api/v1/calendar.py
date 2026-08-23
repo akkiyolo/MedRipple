@@ -46,6 +46,8 @@ def google_calendar_auth(current_user: User = Depends(get_current_user)):
     
     response = RedirectResponse(url=auth_url)
     response.set_cookie(key="google_oauth_state", value=state, httponly=True, max_age=600)
+    if hasattr(flow, 'code_verifier'):
+        response.set_cookie(key="google_code_verifier", value=flow.code_verifier, httponly=True, max_age=600)
     # Also pass user ID in state to know who is connecting? Or rely on session cookie.
     return response
 
@@ -84,7 +86,11 @@ def google_calendar_callback(
     )
     
     # Exchange authorization code for access token
-    flow.fetch_token(code=code)
+    code_verifier = request.cookies.get("google_code_verifier")
+    if code_verifier:
+        flow.fetch_token(code=code, code_verifier=code_verifier)
+    else:
+        flow.fetch_token(code=code)
     credentials = flow.credentials
     
     user.google_access_token = credentials.token
@@ -102,4 +108,5 @@ def google_calendar_callback(
     redirect_dashboard = "/doctor/dashboard" if user.role.value == "DOCTOR" else "/patient/dashboard"
     response = RedirectResponse(url=f"{redirect_dashboard}?success=Calendar+connected")
     response.delete_cookie("google_oauth_state")
+    response.delete_cookie("google_code_verifier")
     return response
