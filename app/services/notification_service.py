@@ -24,10 +24,18 @@ class NotificationService:
             msg["Subject"] = subject
             msg.attach(MIMEText(body, "plain"))
 
-            with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:
-                server.starttls()
-                server.login(settings.EMAIL_USERNAME, settings.EMAIL_PASSWORD)
-                server.send_message(msg)
+            if settings.EMAIL_PORT == 465:
+                # Use SSL directly for port 465
+                with smtplib.SMTP_SSL(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:
+                    server.login(settings.EMAIL_USERNAME, settings.EMAIL_PASSWORD)
+                    server.send_message(msg)
+            else:
+                # Use STARTTLS for 587 or others
+                with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:
+                    server.starttls()
+                    server.login(settings.EMAIL_USERNAME, settings.EMAIL_PASSWORD)
+                    server.send_message(msg)
+                    
             return True
         except Exception as e:
             logger.error(f"Failed to send email to {to_email}: {e}")
