@@ -18,6 +18,26 @@ class NotificationService:
             return True
 
         try:
+            # If the user provides a SendGrid API key, bypass Render SMTP blocks via HTTPS REST API
+            if settings.EMAIL_PASSWORD.startswith("SG."):
+                import httpx
+                headers = {
+                    "Authorization": f"Bearer {settings.EMAIL_PASSWORD}",
+                    "Content-Type": "application/json"
+                }
+                payload = {
+                    "personalizations": [{"to": [{"email": to_email}], "subject": subject}],
+                    "from": {"email": settings.EMAIL_FROM},
+                    "content": [{"type": "text/plain", "value": body}]
+                }
+                response = httpx.post("https://api.sendgrid.com/v3/mail/send", json=payload, headers=headers)
+                
+                if response.status_code >= 400:
+                    logger.error(f"SendGrid API Error: {response.status_code} - {response.text}")
+                    return False
+                return True
+
+            # Otherwise, use standard SMTP (Which fails on Render Free Tier but works locally)
             msg = MIMEMultipart()
             msg["From"] = settings.EMAIL_FROM
             msg["To"] = to_email
