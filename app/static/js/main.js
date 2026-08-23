@@ -2802,3 +2802,21 @@ async function sendChatMessage() {
     msgContainer.innerHTML += `<div class="message ai-message text-danger">Error: ${error.message}</div>`;
   }
 }
+
+async function deleteAppointment(appointmentId) {
+  if (!confirm("Are you sure you want to permanently delete this completed appointment from your history?")) {
+    return;
+  }
+  
+  try {
+    const data = await apiFetch(`/api/v1/appointments/${appointmentId}`, {
+      method: "DELETE"
+    });
+    
+    if (data.success) {
+      window.location.reload();
+    }
+  } catch (error) {
+    alert("Error deleting appointment: " + error.message);
+  }
+}

@@ -227,6 +227,11 @@
               <i class="fa-solid fa-arrow-right"></i>
 
             </a>
+            {% if appt.status.value == "COMPLETED" %}
+            <button onclick="deleteAppointment({{ appt.id }})" class="btn btn-secondary btn-xs" style="color: #ef4444; margin-left: 8px; border-color: #fca5a5;">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+            {% endif %}
 
           </td>
 

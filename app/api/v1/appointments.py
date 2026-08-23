@@ -146,3 +146,18 @@ def get_appointment_timeline(appointment_id: int, current_user: User = Depends(g
         from app.core.exceptions import AuthorizationError
         raise AuthorizationError("You cannot access this appointment timeline")
     return {"success": True, "data": PatientService.get_longitudinal_timeline(db, appt.patient_id), "message": "Appointment timeline fetched"}
+
+@router.delete("/{appointment_id}")
+def delete_appointment(appointment_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    appt = db.query(Appointment).filter(Appointment.id == appointment_id).first()
+    if not appt:
+        return {"success": False, "error": {"code": "RESOURCE_NOT_FOUND", "message": "Appointment not found"}}
+    if not _can_access_appointment(db, current_user, appt):
+        from app.core.exceptions import AuthorizationError
+        raise AuthorizationError("You cannot delete this appointment")
+    if appt.status != AppointmentStatus.COMPLETED:
+        return {"success": False, "error": {"code": "INVALID_STATUS", "message": "Only completed appointments can be deleted"}}
+    
+    db.delete(appt)
+    db.commit()
+    return {"success": True, "data": None, "message": "Appointment deleted successfully"}
