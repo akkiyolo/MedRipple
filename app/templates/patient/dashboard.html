@@ -1,0 +1,400 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  Patient Dashboard — MedRipple
+{% endblock %}
+
+
+{% block page_title %}
+  Good to see you
+{% endblock %}
+
+
+{% block page_subtitle %}
+  Here’s what needs your attention today.
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     TOP METRICS
+     ===================================================== -->
+
+<div class="bento-grid">
+
+
+  <!-- Next appointment -->
+
+  <div class="card col-span-6">
+
+    <div class="card-header">
+
+      <span class="card-title">
+        Next appointment
+      </span>
+
+      <div class="card-icon-box icon-blue">
+
+        <i class="fa-regular fa-calendar-check"></i>
+
+      </div>
+
+    </div>
+
+
+    {% if next_appointment %}
+
+      <div>
+
+        <div class="card-value font-size-lg">
+
+          Dr.
+          {{ next_appointment.doctor.name }}
+
+        </div>
+
+
+        <div class="text-muted mt-1">
+
+          {{ next_appointment.doctor.specialization }}
+
+        </div>
+
+      </div>
+
+
+      <div class="card-footer-text">
+
+        {{
+          next_appointment.start_time.strftime(
+            '%b %d, %Y · %H:%M UTC'
+          )
+        }}
+
+      </div>
+
+
+    {% else %}
+
+      <div class="card-value font-size-lg">
+
+        No upcoming visit
+
+      </div>
+
+
+      <div class="card-footer-text">
+
+        Choose a doctor when you’re ready.
+
+      </div>
+
+    {% endif %}
+
+  </div>
+
+
+  <!-- Medications -->
+
+  <div class="card col-span-3">
+
+    <div class="card-header">
+
+      <span class="card-title">
+        Medications
+      </span>
+
+      <div class="card-icon-box icon-emerald">
+
+        <i class="fa-solid fa-capsules"></i>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-value text-emerald">
+
+      {{ active_medications_count or 0 }}
+
+    </div>
+
+
+    <div class="card-footer-text">
+
+      Active schedules
+
+    </div>
+
+  </div>
+
+
+  <!-- Follow ups -->
+
+  <div class="card col-span-3">
+
+    <div class="card-header">
+
+      <span class="card-title">
+        Follow-ups
+      </span>
+
+      <div class="card-icon-box icon-purple">
+
+        <i class="fa-regular fa-clock"></i>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-value text-purple">
+
+      {{ upcoming_followups_count or 0 }}
+
+    </div>
+
+
+    <div class="card-footer-text">
+
+      Upcoming check-ins
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     APPOINTMENTS + CARE MEMORY
+     ===================================================== -->
+
+<div class="bento-grid">
+
+
+  <!-- Appointments -->
+
+  <div class="card col-span-8">
+
+    <div class="flex-between mb-3">
+
+      <div
+        class="section-heading"
+        style="margin-bottom:0"
+      >
+
+        <h3>
+          Recent appointments
+        </h3>
+
+        <p>
+          Your consultation history in one place.
+        </p>
+
+      </div>
+
+
+      <div class="flex" style="gap: 12px; align-items: center;">
+        {% if not current_user.google_access_token %}
+        <a
+          href="/api/v1/calendar/auth"
+          class="btn btn-secondary btn-sm"
+        >
+          <i class="fa-brands fa-google"></i>
+          Connect Calendar
+        </a>
+        {% endif %}
+        <a
+          href="/patient/doctors"
+          class="btn btn-primary btn-sm"
+        >
+          <i class="fa-solid fa-plus"></i>
+          Book visit
+        </a>
+      </div>
+    </div>
+
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Doctor
+            </th>
+
+            <th>
+              Specialization
+            </th>
+
+            <th>
+              Date
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th></th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+          {% for appt in appointments %}
+
+
+          <tr>
+
+            <td class="font-bold text-main">
+
+              Dr.
+              {{ appt.doctor.name }}
+
+            </td>
+
+
+            <td>
+
+              {{ appt.doctor.specialization }}
+
+            </td>
+
+
+            <td>
+
+              {{
+                appt.start_time.strftime(
+                  '%b %d · %H:%M'
+                )
+              }}
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="badge badge-{{ appt.status.value.lower() }}"
+              >
+
+                {{ appt.status.value }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <a
+                href="/patient/intake/{{ appt.id }}"
+                class="btn btn-secondary btn-xs"
+              >
+
+                Open
+
+              </a>
+
+            </td>
+
+          </tr>
+
+
+          {% else %}
+
+
+          <tr>
+
+            <td
+              colspan="5"
+              class="text-center text-muted py-3"
+            >
+
+              No appointments yet.
+
+            </td>
+
+          </tr>
+
+
+          {% endfor %}
+
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- Care memory -->
+
+  <div class="card col-span-4 flex-column flex-between">
+
+    <div>
+
+      <div class="flex-between mb-2">
+
+        <h3 class="font-outfit font-bold font-size-lg">
+
+          Care memory
+
+        </h3>
+
+
+        <span class="badge badge-ai">
+
+          {{ memory_records_count or 0 }}
+          events
+
+        </span>
+
+      </div>
+
+
+      <p class="text-muted font-size-sm leading-relaxed">
+
+        Your consultations, symptoms,
+        prescriptions and care plans stay
+        connected as one longitudinal record.
+
+      </p>
+
+    </div>
+
+
+    <a
+      href="/patient/timeline"
+      class="btn btn-secondary w-full mt-3"
+    >
+
+      View care timeline
+
+      <i class="fa-solid fa-arrow-right"></i>
+
+    </a>
+
+  </div>
+
+
+</div>
+
+
+{% endblock %}

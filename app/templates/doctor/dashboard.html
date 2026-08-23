@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Doctor Dashboard — MedRipple
+{% endblock %}
+
+{% block page_title %}
+  Clinical workstation
+{% endblock %}
+
+{% block page_subtitle %}
+  Prepare for today's consultations and stay ahead of your schedule.
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="bento-grid">
+
+
+  <div class="card col-span-4">
+
+    <div class="card-header">
+
+      <span class="card-title">
+        Today's visits
+      </span>
+
+      <div class="card-icon-box icon-blue">
+
+        <i class="fa-regular fa-calendar"></i>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-value text-primary">
+
+      {{ today_appointments_count or 0 }}
+
+    </div>
+
+
+    <div class="card-footer-text">
+
+      Patients scheduled today
+
+    </div>
+
+  </div>
+
+
+
+  <div class="card col-span-4 card-ai-glow">
+
+    <div class="card-header">
+
+      <span class="card-title">
+        Visit briefs
+      </span>
+
+      <div class="pulse-dot"></div>
+
+    </div>
+
+
+    <div class="card-value text-amber">
+
+      {{ pending_briefs_count or 0 }}
+
+    </div>
+
+
+    <div class="card-footer-text">
+
+      Patients with preparation pending
+
+    </div>
+
+  </div>
+
+
+
+  <div class="card col-span-4">
+
+    <div class="card-header">
+
+      <span class="card-title">
+        Consultation length
+      </span>
+
+      <div class="card-icon-box icon-purple">
+
+        <i class="fa-regular fa-clock"></i>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-value text-purple">
+
+      {{ doctor.slot_duration }}
+
+      <span class="font-size-sm">
+        min
+      </span>
+
+    </div>
+
+
+    <div class="card-footer-text">
+
+      Standard appointment window
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="card">
+
+  <div class="flex-between mb-3">
+    <div class="section-heading" style="margin-bottom:0">
+      <h3>Today's consultations</h3>
+      <p>Open a patient brief to review relevant history before the visit.</p>
+    </div>
+    
+    {% if not current_user.google_access_token %}
+    <a href="/api/v1/calendar/auth" class="btn btn-secondary btn-sm">
+      <i class="fa-brands fa-google"></i>
+      Connect Calendar
+    </a>
+    {% endif %}
+  </div>
+
+
+  <div class="table-container">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Patient
+          </th>
+
+          <th>
+            Time
+          </th>
+
+          <th>
+            Status
+          </th>
+
+          <th>
+            Reason
+          </th>
+
+          <th>
+            Brief
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+
+        {% for appt in appointments %}
+
+
+        <tr>
+
+          <td class="font-bold text-main">
+
+            {{ appt.patient.name }}
+
+          </td>
+
+
+          <td>
+
+            {{ appt.start_time.strftime('%H:%M UTC') }}
+
+          </td>
+
+
+          <td>
+
+            <span
+              class="badge badge-{{ appt.status.value.lower() }}"
+            >
+
+              {{ appt.status.value }}
+
+            </span>
+
+          </td>
+
+
+          <td>
+
+            {{ appt.reason or 'General follow-up' }}
+
+          </td>
+
+
+          <td>
+
+            <a
+              href="/doctor/copilot/{{ appt.id }}"
+              class="btn btn-secondary btn-xs"
+            >
+
+              Open brief
+
+              <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+          </td>
+
+        </tr>
+
+
+        {% else %}
+
+
+        <tr>
+
+          <td
+            colspan="5"
+            class="text-center text-muted py-3"
+          >
+
+            No consultations scheduled today.
+
+          </td>
+
+        </tr>
+
+
+        {% endfor %}
+
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+{% endblock %}

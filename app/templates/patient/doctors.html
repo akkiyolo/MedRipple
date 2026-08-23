@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  Find a Doctor — MedRipple
+{% endblock %}
+
+
+{% block page_title %}
+  Find a doctor
+{% endblock %}
+
+
+{% block page_subtitle %}
+  Search specialists and choose a time that works for you.
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- Search -->
+
+<div class="card mb-3">
+
+  <form
+    id="search-doctors-form"
+    class="flex-row gap-2"
+  >
+
+    <div style="flex:1">
+
+      <input
+        type="text"
+        id="spec-input"
+        class="form-control"
+        placeholder="Search by specialty or doctor name"
+      >
+
+    </div>
+
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+    >
+
+      <i class="fa-solid fa-magnifying-glass"></i>
+
+      Search
+
+    </button>
+
+  </form>
+
+</div>
+
+
+
+<!-- Doctors -->
+
+<div
+  class="bento-grid"
+  id="doctors-grid"
+>
+
+
+  {% for doc in doctors %}
+
+
+  <div
+    class="card col-span-4 doctor-card"
+
+    data-specialization="{{ doc.specialization }}"
+
+    data-doctor-name="{{ doc.name }}"
+  >
+
+
+    <div>
+
+
+      <div class="flex-row gap-2 align-center">
+
+
+        <img
+          src="{{ doc.profile_image_url or '/static/images/default_avatar.svg' }}"
+          class="doctor-avatar"
+          alt="Dr. {{ doc.name }}"
+        >
+
+
+        <div>
+
+          <div class="doctor-name">
+
+            Dr.
+            {{ doc.name }}
+
+          </div>
+
+
+          <span class="badge badge-confirmed mt-1">
+
+            {{ doc.specialization }}
+
+          </span>
+
+        </div>
+
+
+      </div>
+
+
+      <p class="doctor-bio">
+
+        {{
+          doc.bio or
+          'Focused on thoughtful, personalized care and continuity across visits.'
+        }}
+
+      </p>
+
+
+    </div>
+
+
+    <button
+      class="btn btn-primary w-full select-doctor-btn mt-3"
+
+      data-doctor-id="{{ doc.id }}"
+
+      data-doctor-name="{{ doc.name }}"
+    >
+
+      Choose a time
+
+      <i class="fa-solid fa-arrow-right"></i>
+
+    </button>
+
+
+  </div>
+
+
+  {% else %}
+
+
+  <div class="card col-span-12">
+
+    <div class="empty-state">
+
+      <div class="empty-state-icon">
+
+        <i class="fa-regular fa-user"></i>
+
+      </div>
+
+
+      <h3>
+        No doctors found
+      </h3>
+
+
+      <p>
+        Try another specialty or check back later.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  {% endfor %}
+
+
+</div>
+
+
+
+<!-- =====================================================
+     BOOKING MODAL
+     ===================================================== -->
+
+<div
+  id="booking-modal"
+  class="modal-backdrop"
+>
+
+
+  <div class="modal-content">
+
+
+    <div class="modal-header">
+
+
+      <div>
+
+        <div class="eyebrow">
+          APPOINTMENT
+        </div>
+
+
+        <h3
+          class="modal-title"
+          id="modal-doc-title"
+        >
+
+          Book an appointment
+
+        </h3>
+
+      </div>
+
+
+      <button
+        class="modal-close"
+        data-modal-close="booking-modal"
+        aria-label="Close"
+      >
+
+        &times;
+
+      </button>
+
+
+    </div>
+
+
+
+    <!-- Date -->
+
+    <div class="form-group">
+
+      <label
+        class="form-label"
+        for="booking-date"
+      >
+
+        Choose a date
+
+      </label>
+
+
+      <input
+        type="date"
+        id="booking-date"
+        class="form-control"
+      >
+
+    </div>
+
+
+
+    <!-- Slots -->
+
+    <div class="form-group">
+
+      <label class="form-label">
+
+        Available times
+
+      </label>
+
+
+      <div
+        id="slots-container"
+        class="slot-grid"
+      >
+
+        <span class="text-muted font-size-sm">
+
+          Select a date to see availability.
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- Reason -->
+
+    <div class="form-group">
+
+      <label
+        class="form-label"
+        for="symptoms-input"
+      >
+
+        Reason for visit
+
+      </label>
+
+
+      <textarea
+        id="symptoms-input"
+        class="form-control"
+        rows="4"
+        placeholder="Briefly describe why you’d like to see the doctor."
+      ></textarea>
+
+    </div>
+
+
+
+    <!-- Buttons -->
+
+    <div class="flex-end gap-1 mt-3">
+
+      <button
+        class="btn btn-secondary"
+        data-modal-close="booking-modal"
+      >
+
+        Cancel
+
+      </button>
+
+
+      <button
+        class="btn btn-primary"
+        id="confirm-booking-btn"
+        disabled
+      >
+
+        Confirm appointment
+
+      </button>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+{% endblock %}

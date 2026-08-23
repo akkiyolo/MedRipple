@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Care Plan — MedRipple
+{% endblock %}
+
+{% block page_title %}
+  Your care plan
+{% endblock %}
+
+{% block page_subtitle %}
+  A structured view of the next steps in your care.
+{% endblock %}
+
+
+{% block content %}
+
+<div class="bento-grid">
+
+  <div class="card col-span-8 mx-auto">
+
+
+    {% if care_plan %}
+
+
+    <div class="mb-3">
+
+      <span class="badge badge-confirmed">
+        Active plan
+      </span>
+
+
+      <h2 class="font-outfit font-bold font-size-xl text-main mt-2">
+
+        {{ care_plan.title }}
+
+      </h2>
+
+
+      <p class="text-muted font-size-md leading-relaxed mt-1">
+
+        {{ care_plan.overview }}
+
+      </p>
+
+    </div>
+
+
+
+    <div class="section-heading">
+
+      <h3>
+        Recovery and action phases
+      </h3>
+
+      <p>
+        Follow the plan provided by your clinician.
+      </p>
+
+    </div>
+
+
+    <div class="flex-column gap-2 mb-3">
+
+
+      {% for phase in care_plan.phases %}
+
+
+      <div class="care-plan-phase">
+
+        <h4>
+          {{ phase.day_range }}
+        </h4>
+
+
+        <ul class="text-muted font-size-sm pl-3 mt-2">
+
+          {% for item in phase.action_items %}
+
+          <li class="mb-1">
+            {{ item }}
+          </li>
+
+          {% endfor %}
+
+        </ul>
+
+      </div>
+
+
+      {% endfor %}
+
+
+    </div>
+
+
+
+    {% if care_plan.warning_signs %}
+
+
+    <div class="warning-box mb-3">
+
+      <h4>
+
+        <i class="fa-solid fa-triangle-exclamation"></i>
+
+        When to seek further help
+
+      </h4>
+
+
+      <ul class="text-muted font-size-sm pl-3 mt-2">
+
+        {% for sign in care_plan.warning_signs %}
+
+        <li class="mb-1">
+          {{ sign }}
+        </li>
+
+        {% endfor %}
+
+      </ul>
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    <div class="text-sub font-size-sm">
+
+      <i class="fa-regular fa-clock"></i>
+
+      Follow-up:
+
+      {{ care_plan.follow_up_timeline }}
+
+    </div>
+
+
+    {% else %}
+
+
+    <div class="empty-state">
+
+      <div class="empty-state-icon">
+
+        <i class="fa-regular fa-clipboard"></i>
+
+      </div>
+
+
+      <h3>
+        No active care plan
+      </h3>
+
+
+      <p>
+        Your care plan will appear here after your next completed consultation.
+      </p>
+
+    </div>
+
+
+    {% endif %}
+
+
+  </div>
+
+</div>
+
+{% endblock %}

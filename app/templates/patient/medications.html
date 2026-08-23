@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Medications — MedRipple
+{% endblock %}
+
+{% block page_title %}
+  Medications
+{% endblock %}
+
+{% block page_subtitle %}
+  Keep track of your current prescriptions and scheduled doses.
+{% endblock %}
+
+
+{% block content %}
+
+<div class="bento-grid">
+
+
+  <!-- Prescriptions -->
+
+  <div class="card col-span-8">
+
+    <div class="section-heading">
+
+      <h3>
+        Active prescriptions
+      </h3>
+
+      <p>
+        Medication currently associated with your care.
+      </p>
+
+    </div>
+
+
+    <div class="flex-column gap-2">
+
+
+      {% for rx in prescriptions %}
+
+
+      <div class="care-plan-phase">
+
+        <div class="flex-between">
+
+          <div>
+
+            <h4 class="font-outfit font-bold text-main">
+
+              {{ rx.medication }}
+
+            </h4>
+
+            <div class="text-muted font-size-sm mt-1">
+
+              {{ rx.dosage }}
+
+              <span aria-hidden="true">·</span>
+
+              {{ rx.frequency }}
+
+              <span aria-hidden="true">·</span>
+
+              {{ rx.duration }}
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="btn btn-secondary btn-sm check-adherence-btn"
+            data-rx-id="{{ rx.id }}"
+          >
+
+            Adherence
+
+          </button>
+
+        </div>
+
+
+        {% if rx.instructions %}
+
+        <p class="text-sub font-size-xs mt-2">
+
+          {{ rx.instructions }}
+
+        </p>
+
+        {% endif %}
+
+      </div>
+
+
+      {% else %}
+
+
+      <div class="empty-state">
+
+        <div class="empty-state-icon">
+
+          <i class="fa-solid fa-capsules"></i>
+
+        </div>
+
+        <h3>
+          No active prescriptions
+        </h3>
+
+        <p>
+          Active medication schedules will appear here after your clinician prescribes them.
+        </p>
+
+      </div>
+
+
+      {% endfor %}
+
+
+    </div>
+
+  </div>
+
+
+
+  <!-- Reminders -->
+
+  <div class="card col-span-4">
+
+    <div class="section-heading">
+
+      <h3>
+        Today's schedule
+      </h3>
+
+      <p>
+        Upcoming medication reminders.
+      </p>
+
+    </div>
+
+
+    <div
+      class="flex-column gap-2"
+      id="reminders-list"
+    >
+
+
+      {% for sched in upcoming_schedules %}
+
+
+      <div class="care-plan-phase">
+
+        <div class="flex-between">
+
+          <div>
+
+            <div class="font-bold font-size-sm">
+
+              {{ sched.prescription.medication }}
+
+            </div>
+
+            <div class="text-muted font-size-xs mt-1">
+
+              {{ sched.scheduled_time.strftime('%H:%M UTC') }}
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="btn btn-primary btn-xs ack-reminder-btn"
+            data-sched-id="{{ sched.id }}"
+          >
+
+            Take
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      {% else %}
+
+
+      <div class="empty-state">
+
+        <div class="empty-state-icon">
+
+          <i class="fa-regular fa-circle-check"></i>
+
+        </div>
+
+        <h3>
+          You're all caught up
+        </h3>
+
+        <p>
+          There are no pending medication reminders right now.
+        </p>
+
+      </div>
+
+
+      {% endfor %}
+
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ADHERENCE MODAL
+     ===================================================== -->
+
+<div
+  id="adherence-modal"
+  class="modal-backdrop"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <div>
+
+        <div class="eyebrow">
+          MEDICATION
+        </div>
+
+        <h3 class="modal-title">
+          Adherence
+        </h3>
+
+      </div>
+
+
+      <button
+        class="modal-close"
+        data-modal-close="adherence-modal"
+        aria-label="Close"
+      >
+        &times;
+      </button>
+
+    </div>
+
+
+    <div
+      id="adherence-body"
+      class="py-2"
+    >
+      Loading adherence information...
+    </div>
+
+
+    <div class="flex-end mt-3">
+
+      <button
+        class="btn btn-secondary"
+        data-modal-close="adherence-modal"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Admin — MedRipple
+{% endblock %}
+
+{% block page_title %}
+  System overview
+{% endblock %}
+
+{% block page_subtitle %}
+  Monitor the MedRipple care network and registered clinicians.
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="bento-grid">
+
+
+  <div class="card col-span-3">
+
+    <div class="card-header">
+
+      <span class="card-title">
+        Patients
+      </span>
+
+      <div class="card-icon-box icon-blue">
+
+        <i class="fa-regular fa-user"></i>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-value text-primary">
+
+      {{ total_patients or 0 }}
+
+    </div>
+
+
+    <div class="card-footer-text">
+      Registered patients
+    </div>
+
+  </div>
+
+
+
+  <div class="card col-span-3">
+
+    <div class="card-header">
+
+      <span class="card-title">
+        Doctors
+      </span>
+
+      <div class="card-icon-box icon-emerald">
+
+        <i class="fa-solid fa-user-doctor"></i>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-value text-emerald">
+
+      {{ total_doctors or 0 }}
+
+    </div>
+
+
+    <div class="card-footer-text">
+      Active clinicians
+    </div>
+
+  </div>
+
+
+
+  <div class="card col-span-3">
+
+    <div class="card-header">
+
+      <span class="card-title">
+        Appointments
+      </span>
+
+      <div class="card-icon-box icon-purple">
+
+        <i class="fa-regular fa-calendar"></i>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-value text-purple">
+
+      {{ total_appointments or 0 }}
+
+    </div>
+
+
+    <div class="card-footer-text">
+      Total care encounters
+    </div>
+
+  </div>
+
+
+
+  <div class="card col-span-3">
+
+    <div class="card-header">
+
+      <span class="card-title">
+        Cancelled
+      </span>
+
+      <div class="card-icon-box icon-amber">
+
+        <i class="fa-regular fa-calendar-xmark"></i>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-value text-rose">
+
+      {{ cancelled_appointments or 0 }}
+
+    </div>
+
+
+    <div class="card-footer-text">
+      Cancelled or rescheduled
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="card">
+
+  <div class="section-heading">
+
+    <h3>
+      Clinician directory
+    </h3>
+
+    <p>
+      Registered healthcare providers and their appointment configuration.
+    </p>
+
+  </div>
+
+
+  <div class="table-container">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Doctor
+          </th>
+
+          <th>
+            Specialty
+          </th>
+
+          <th>
+            License
+          </th>
+
+          <th>
+            Slot
+          </th>
+
+          <th>
+            Action
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+
+        {% for doc in doctors %}
+
+
+        <tr>
+
+          <td class="font-bold text-main">
+
+            Dr.
+            {{ doc.name }}
+
+          </td>
+
+
+          <td>
+
+            <span class="badge badge-confirmed">
+
+              {{ doc.specialization }}
+
+            </span>
+
+          </td>
+
+
+          <td>
+
+            {{ doc.license_number or 'N/A' }}
+
+          </td>
+
+
+          <td>
+
+            {{ doc.slot_duration }} min
+
+          </td>
+
+
+          <td>
+
+            <button
+              class="btn btn-secondary btn-xs delete-doctor-btn"
+              data-doctor-id="{{ doc.id }}"
+            >
+
+              Delete
+
+            </button>
+
+          </td>
+
+        </tr>
+
+
+        {% else %}
+
+
+        <tr>
+
+          <td
+            colspan="5"
+            class="text-center text-muted py-3"
+          >
+
+            No doctors registered.
+
+          </td>
+
+        </tr>
+
+
+        {% endfor %}
+
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Leave Management — MedRipple
+{% endblock %}
+
+{% block page_title %}
+  Leave management
+{% endblock %}
+
+{% block page_subtitle %}
+  Manage planned absence and let MedRipple identify affected appointments.
+{% endblock %}
+
+
+{% block content %}
+
+<div class="bento-grid">
+
+  <div class="card col-span-8 mx-auto">
+
+    <div class="section-heading">
+
+      <h3>
+        Schedule leave
+      </h3>
+
+      <p>
+        MedRipple will identify appointments affected by your absence and begin the rescheduling workflow.
+      </p>
+
+    </div>
+
+
+    <form id="doctor-leave-form">
+
+
+      <div class="form-group">
+
+        <label
+          class="form-label"
+          for="leave-start"
+        >
+          Start date
+        </label>
+
+        <input
+          type="date"
+          id="leave-start"
+          class="form-control"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label
+          class="form-label"
+          for="leave-end"
+        >
+          End date
+        </label>
+
+        <input
+          type="date"
+          id="leave-end"
+          class="form-control"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label
+          class="form-label"
+          for="leave-reason"
+        >
+          Reason
+        </label>
+
+        <input
+          type="text"
+          id="leave-reason"
+          class="form-control"
+          placeholder="Conference, annual leave, personal leave..."
+        >
+
+      </div>
+
+
+      <div class="card mb-3">
+
+        <div class="card-title mb-1">
+          What happens after submission
+        </div>
+
+        <p class="text-muted font-size-sm leading-relaxed">
+
+          Existing appointments during the selected period are identified
+          so that affected patients can be handled through the appropriate
+          rescheduling workflow.
+
+        </p>
+
+      </div>
+
+
+      <button
+        type="submit"
+        class="btn btn-primary w-full"
+      >
+
+        Submit leave
+
+        <i class="fa-solid fa-arrow-right"></i>
+
+      </button>
+
+
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

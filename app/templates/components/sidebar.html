@@ -1,0 +1,218 @@
+<aside class="sidebar">
+
+  <!-- Brand -->
+
+  <a
+    href="/"
+    class="brand-logo"
+    aria-label="MedRipple home"
+  >
+
+    <span
+      class="brand-mark"
+      aria-hidden="true"
+    >
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+    </span>
+
+
+    <span class="brand-name">
+      Med<span>Ripple</span>
+    </span>
+
+  </a>
+
+
+  <div class="sidebar-section-label">
+    Workspace
+  </div>
+
+
+  <ul class="nav-menu">
+
+
+    {% if current_user and current_user.role.value == 'PATIENT' %}
+
+
+      <li>
+
+        <a
+          href="/patient/dashboard"
+          class="nav-link {% if active_page == 'dashboard' %}active{% endif %}"
+        >
+
+          <i class="fa-regular fa-house"></i>
+
+          <span>
+            Overview
+          </span>
+
+        </a>
+
+      </li>
+
+
+      <li>
+
+        <a
+          href="/patient/doctors"
+          class="nav-link {% if active_page == 'doctors' %}active{% endif %}"
+        >
+
+          <i class="fa-regular fa-calendar-plus"></i>
+
+          <span>
+            Find a doctor
+          </span>
+
+        </a>
+
+      </li>
+
+
+      <li>
+
+        <a
+          href="/patient/medications"
+          class="nav-link {% if active_page == 'medications' %}active{% endif %}"
+        >
+
+          <i class="fa-solid fa-capsules"></i>
+
+          <span>
+            Medications
+          </span>
+
+        </a>
+
+      </li>
+
+
+      <li>
+
+        <a
+          href="/patient/care-plan"
+          class="nav-link {% if active_page == 'care_plan' %}active{% endif %}"
+        >
+
+          <i class="fa-regular fa-clipboard"></i>
+
+          <span>
+            Care plan
+          </span>
+
+        </a>
+
+      </li>
+
+
+      <li>
+
+        <a
+          href="/patient/timeline"
+          class="nav-link {% if active_page == 'timeline' %}active{% endif %}"
+        >
+
+          <i class="fa-regular fa-clock"></i>
+
+          <span>
+            Care timeline
+          </span>
+
+        </a>
+
+      </li>
+
+
+    {% elif current_user and current_user.role.value == 'DOCTOR' %}
+
+
+      <li>
+
+        <a
+          href="/doctor/dashboard"
+          class="nav-link {% if active_page == 'dashboard' %}active{% endif %}"
+        >
+
+          <i class="fa-regular fa-house"></i>
+
+          <span>
+            Overview
+          </span>
+
+        </a>
+
+      </li>
+
+
+      <li>
+
+        <a
+          href="/doctor/leave"
+          class="nav-link {% if active_page == 'leave' %}active{% endif %}"
+        >
+
+          <i class="fa-regular fa-calendar-xmark"></i>
+
+          <span>
+            Leave
+          </span>
+
+        </a>
+
+      </li>
+
+
+    {% else %}
+
+
+      <li>
+
+        <a
+          href="/admin/dashboard"
+          class="nav-link {% if active_page == 'admin' %}active{% endif %}"
+        >
+
+          <i class="fa-regular fa-chart-bar"></i>
+
+          <span>
+            Overview
+          </span>
+
+        </a>
+
+      </li>
+
+
+    {% endif %}
+
+  </ul>
+
+
+  <div class="sidebar-bottom">
+
+    <div class="sidebar-note">
+
+      <span class="status-dot"></span>
+
+      <div>
+
+        <strong>
+          Care system online
+        </strong>
+
+        <small>
+          MedRipple v1.0
+        </small>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</aside>

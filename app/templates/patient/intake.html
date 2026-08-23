@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Visit Intake — MedRipple
+{% endblock %}
+
+{% block page_title %}
+  Prepare for your visit
+{% endblock %}
+
+{% block page_subtitle %}
+  Tell us what you're experiencing before you meet your doctor.
+{% endblock %}
+
+
+{% block content %}
+
+<div class="bento-grid">
+
+  <div class="card col-span-8 mx-auto">
+
+    <div class="flex-row gap-2 align-center mb-3">
+
+      <div class="card-icon-box icon-blue">
+        <i class="fa-regular fa-clipboard"></i>
+      </div>
+
+      <div>
+
+        <h3 class="font-outfit font-bold font-size-lg">
+          Pre-visit intake
+        </h3>
+
+        <p class="text-muted font-size-sm mt-1">
+          Your answers help your clinician prepare before the consultation.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <form
+      id="ai-intake-form"
+      data-appointment-id="{{ appointment_id }}"
+    >
+
+      <div class="form-group">
+
+        <label
+          class="form-label"
+          for="raw-symptoms"
+        >
+          What brings you in today?
+        </label>
+
+        <textarea
+          id="raw-symptoms"
+          class="form-control"
+          rows="7"
+          placeholder="Describe your symptoms, when they started, what makes them better or worse, and anything else you think your doctor should know."
+          required
+        ></textarea>
+
+        <div class="form-help">
+          Be as specific as you can. This information is shared with your clinician as part of the visit preparation process.
+        </div>
+
+      </div>
+
+
+      <div class="card mb-3">
+
+        <div class="card-title mb-2">
+          What happens next
+        </div>
+
+        <div class="text-muted font-size-sm leading-relaxed">
+
+          MedRipple organizes your response into a concise pre-visit brief.
+          It may also suggest clarification questions for your clinician.
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="submit"
+        class="btn btn-primary w-full"
+      >
+
+        Prepare my visit
+
+        <i class="fa-solid fa-arrow-right"></i>
+
+      </button>
+
+    </form>
+
+
+    <!-- AI result -->
+
+    <div
+      id="ai-result-area"
+      class="hidden mt-3 pt-3 border-top"
+    >
+
+      <div class="flex-between mb-3">
+
+        <div>
+
+          <div class="eyebrow">
+            VISIT PREPARATION
+          </div>
+
+          <h3 class="font-outfit font-bold font-size-lg">
+            Your visit brief
+          </h3>
+
+        </div>
+
+
+        <span
+          class="badge"
+          id="urgency-badge"
+        >
+          REVIEW
+        </span>
+
+      </div>
+
+
+      <div class="card mb-2">
+
+        <div class="card-title">
+          Main concern
+        </div>
+
+        <p
+          id="chief-complaint-text"
+          class="text-main font-bold mt-1"
+        ></p>
+
+      </div>
+
+
+      <div class="card mb-3">
+
+        <div class="card-title">
+          Questions for your doctor
+        </div>
+
+        <ul
+          id="adaptive-questions-list"
+          class="text-muted font-size-sm mt-2 pl-3"
+        ></ul>
+
+      </div>
+
+
+      <div class="card mb-3">
+
+        <div class="text-muted font-size-xs leading-relaxed">
+
+          This preparation is intended to help organize your visit.
+          It does not replace professional medical advice or diagnosis.
+
+        </div>
+
+      </div>
+
+
+      <a
+        href="/patient/dashboard"
+        class="btn btn-secondary w-full"
+      >
+
+        Return to dashboard
+
+        <i class="fa-solid fa-arrow-right"></i>
+
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

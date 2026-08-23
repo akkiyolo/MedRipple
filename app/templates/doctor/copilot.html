@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Patient Brief — MedRipple
+{% endblock %}
+
+{% block page_title %}
+  Patient visit
+{% endblock %}
+
+{% block page_subtitle %}
+  Review the patient's context before documenting today's consultation.
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="bento-grid">
+
+
+  <!-- ===================================================
+       PATIENT BRIEF
+       =================================================== -->
+
+  <div class="card col-span-6">
+
+    <div class="flex-between mb-3">
+
+      <div>
+
+        <div class="eyebrow">
+          PRE-VISIT BRIEF
+        </div>
+
+        <h3 class="font-outfit font-bold font-size-lg">
+          Patient context
+        </h3>
+
+      </div>
+
+
+      <button
+        class="btn btn-secondary btn-xs"
+        id="regen-brief-btn"
+        data-appt-id="{{ appointment.id }}"
+      >
+
+        <i class="fa-solid fa-rotate"></i>
+
+        Refresh
+
+      </button>
+
+    </div>
+
+
+    <div
+      id="brief-loading"
+      class="text-muted py-3"
+    >
+
+      Preparing patient context...
+
+    </div>
+
+
+    <div
+      id="brief-content"
+      class="hidden"
+    >
+
+
+      <div class="mb-3">
+
+        <span
+          class="badge"
+          id="brief-urgency"
+        >
+          REVIEW
+        </span>
+
+      </div>
+
+
+      <div class="care-plan-phase mb-2">
+
+        <div class="card-title">
+          Chief concern
+        </div>
+
+        <p
+          id="chief-complaint"
+          class="text-main font-bold mt-1"
+        ></p>
+
+      </div>
+
+
+      <div class="care-plan-phase mb-2">
+
+        <div class="card-title">
+          Relevant history
+        </div>
+
+        <ul
+          id="history-list"
+          class="text-muted font-size-sm mt-2 pl-3"
+        ></ul>
+
+      </div>
+
+
+      <div class="care-plan-phase">
+
+        <div class="card-title">
+          Suggested questions
+        </div>
+
+        <ul
+          id="questions-list"
+          class="text-muted font-size-sm mt-2 pl-3"
+        ></ul>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ===================================================
+       CONSULTATION
+       =================================================== -->
+
+  <div class="card col-span-6">
+
+    <div class="section-heading">
+
+      <h3>
+        Consultation record
+      </h3>
+
+      <p>
+        Document findings, treatment and the follow-up plan.
+      </p>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label
+        class="form-label"
+        for="clinical-notes"
+      >
+        Clinical notes
+      </label>
+
+
+      <textarea
+        id="clinical-notes"
+        class="form-control"
+        rows="7"
+        placeholder="Record relevant findings, assessment and treatment plan..."
+      ></textarea>
+
+    </div>
+
+
+    <div class="border-top pt-2 mt-2">
+
+      <div class="section-heading">
+
+        <h3>
+          Prescription
+        </h3>
+
+        <p>
+          Add medication if clinically appropriate.
+        </p>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label
+          class="form-label"
+          for="med-name"
+        >
+          Medication
+        </label>
+
+        <input
+          type="text"
+          id="med-name"
+          class="form-control"
+          placeholder="Medication name"
+        >
+
+      </div>
+
+
+      <div class="flex-row gap-1 mb-2">
+
+        <input
+          type="text"
+          id="med-dosage"
+          class="form-control"
+          placeholder="Dosage"
+        >
+
+        <input
+          type="text"
+          id="med-freq"
+          class="form-control"
+          placeholder="Frequency"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <input
+          type="text"
+          id="med-duration"
+          class="form-control"
+          placeholder="Duration"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label class="form-label" for="med-instructions">
+          Instructions
+        </label>
+
+        <textarea
+          id="med-instructions"
+          class="form-control"
+          rows="2"
+          placeholder="e.g. Take with food; avoid alcohol."
+        ></textarea>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="btn btn-primary w-full mt-2"
+      id="finalize-consultation-btn"
+      data-appt-id="{{ appointment.id }}"
+    >
+
+      Complete consultation
+
+      <i class="fa-solid fa-arrow-right"></i>
+
+    </button>
+
+  </div>
+
+</div>
+
+
+{% endblock %}
